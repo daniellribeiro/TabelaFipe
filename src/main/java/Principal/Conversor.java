@@ -3,11 +3,9 @@ package Principal;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import Modelo.Modelo;
+import com.fasterxml.jackson.databind.type.CollectionType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -46,6 +44,24 @@ public class Conversor {
         try {
             return (T) mapper.readValue(json, classe);
         } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public <T> List<T> obterJson(String json, Class<T> classe){
+        CollectionType lista = mapper.getTypeFactory().constructCollectionType(List.class,classe);
+
+        try{
+            return mapper.readValue(json,lista);
+        }catch (JsonProcessingException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public <T> T obterJson2(String json, Class<T> classe){
+        try{
+            return mapper.readValue(json,classe);
+        }catch (JsonProcessingException e){
             throw new RuntimeException(e);
         }
     }
